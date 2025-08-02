@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeVoyant - 智能代码审查系统</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 0 10px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                display: block;
+                margin: 10px auto;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="header">
+                <h1><i class="fas fa-code"></i> CodeVoyant</h1>
+                <p>智能代码审查系统 - 让代码质量更上一层楼</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="reviewCount">0</div>
+                    <div class="stat-label">代码审查</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="issueCount">0</div>
+                    <div class="stat-label">发现问题</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="repoCount">0</div>
+                    <div class="stat-label">集成仓库</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="aiModelCount">0</div>
+                    <div class="stat-label">AI模型</div>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI智能分析</h3>
+                    <p>基于先进的AI技术，自动分析代码质量、安全漏洞和性能问题，提供专业的改进建议。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>安全检测</h3>
+                    <p>全面检测SQL注入、XSS攻击、权限控制等安全漏洞，确保代码的安全性。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>性能优化</h3>
+                    <p>识别性能瓶颈，提供算法优化、内存管理和数据库查询优化建议。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <h3>多仓库支持</h3>
+                    <p>支持GitLab、GitHub、Gitee等主流代码托管平台，无缝集成现有工作流。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>实时监控</h3>
+                    <p>实时监控代码质量指标，生成详细的审查报告和趋势分析。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>自动化集成</h3>
+                    <p>通过Webhook自动触发代码审查，支持CI/CD流程集成。</p>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <button class="btn btn-primary" @click="goToAdmin">
+                    <i class="fas fa-cog"></i> 后台管理
+                </button>
+                <button class="btn btn-secondary" @click="goToApiDocs">
+                    <i class="fas fa-book"></i> API文档
+                </button>
+                <button class="btn btn-primary" @click="goToReview">
+                    <i class="fas fa-search"></i> 开始审查
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const { createApp } = Vue;
+        
+        createApp({
+            methods: {
+                goToAdmin() {
+                    window.location.href = '/admin';
+                },
+                goToApiDocs() {
+                    window.location.href = '/api-docs';
+                },
+                goToReview() {
+                    window.location.href = '/review';
+                }
+            },
+            mounted() {
+                // 获取统计数据
+                this.loadStats();
+            },
+            methods: {
+                async loadStats() {
+                    try {
+                        const response = await axios.get('/api/admin/dashboard');
+                        const data = response.data;
+                        
+                        document.getElementById('reviewCount').textContent = data.totalReviews || data.totalReviewCount || 0;
+                        document.getElementById('issueCount').textContent = data.totalIssues || data.totalIssueCount || 0;
+                        document.getElementById('repoCount').textContent = data.totalRepositories || data.totalRepositoryCount || 0;
+                        document.getElementById('aiModelCount').textContent = data.totalAiModels || data.totalModelCount || 0;
+                    } catch (error) {
+                        console.log('无法加载统计数据，使用默认值');
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

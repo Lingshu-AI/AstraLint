@@ -1,0 +1,35 @@
+# Git相关
+.git
+.gitignore
+
+# IDE相关
+.idea
+.vscode
+*.iml
+
+# Maven相关
+target/
+.mvn/
+
+# 日志文件
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 测试相关
+src/test/
+
+# 文档
+README.md
+*.md
+
+# Docker相关
+Dockerfile
+.dockerignore
+docker-compose.yml 

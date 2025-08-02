@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码审查 - CodeVoyant</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+        }
+        
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .review-form {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .code-editor {
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .CodeMirror {
+            height: 400px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .review-result {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            color: #333;
+        }
+        
+        .result-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .issue-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .issue-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .issue-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .issue-severity {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        
+        .severity-high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .severity-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .severity-low {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .result-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-search"></i> 代码审查</h1>
+                <a href="/" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> 返回首页
+                </a>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="review-form">
+                <h2 style="margin-bottom: 20px; color: #333;">提交代码进行审查</h2>
+                
+                <div class="form-group">
+                    <label for="reviewType">审查类型</label>
+                    <select id="reviewType" class="form-control" v-model="reviewType">
+                        <option value="BASIC">基础审查</option>
+                        <option value="SECURITY">安全审查</option>
+                        <option value="PERFORMANCE">性能审查</option>
+                        <option value="COMPREHENSIVE">综合审查</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="language">编程语言</label>
+                    <select id="language" class="form-control" v-model="language">
+                        <option value="java">Java</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="cpp">C++</option>
+                        <option value="csharp">C#</option>
+                        <option value="php">PHP</option>
+                        <option value="go">Go</option>
+                        <option value="rust">Rust</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fileName">文件名</label>
+                    <input type="text" id="fileName" class="form-control" v-model="fileName" placeholder="例如: UserService.java">
+                </div>
+                
+                <div class="form-group">
+                    <label for="codeContent">代码内容</label>
+                    <div class="code-editor">
+                        <textarea id="codeContent" v-model="codeContent" placeholder="请粘贴或输入要审查的代码..."></textarea>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" @click="submitReview" :disabled="loading">
+                        <i class="fas fa-search"></i> {{ loading ? '审查中...' : '开始审查' }}
+                    </button>
+                    <button class="btn btn-secondary" @click="clearForm">
+                        <i class="fas fa-eraser"></i> 清空
+                    </button>
+                </div>
+            </div>
+            
+            <div class="review-result" v-if="reviewResult" :class="{ hidden: !reviewResult }">
+                <div class="result-header">
+                    <div class="result-title">审查结果</div>
+                    <div class="result-status" :class="getStatusClass()">
+                        {{ getStatusText() }}
+                    </div>
+                </div>
+                
+                <div v-if="reviewResult.summary" style="margin-bottom: 20px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">摘要</h3>
+                    <p style="color: #666; line-height: 1.6;">{{ reviewResult.summary }}</p>
+                </div>
+                
+                <div v-if="reviewResult.securityIssues && reviewResult.securityIssues.length > 0">
+                    <h3 style="color: #333; margin-bottom: 15px;">安全问题</h3>
+                    <div class="issue-item" v-for="issue in reviewResult.securityIssues" :key="issue.id">
+                        <div class="issue-title">{{ issue.title }}</div>
+                        <div class="issue-description">{{ issue.description }}</div>
+                        <div class="issue-severity" :class="getSeverityClass(issue.severity)">
+                            {{ issue.severity }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div v-if="reviewResult.performanceIssues && reviewResult.performanceIssues.length > 0">
+                    <h3 style="color: #333; margin-bottom: 15px;">性能问题</h3>
+                    <div class="issue-item" v-for="issue in reviewResult.performanceIssues" :key="issue.id">
+                        <div class="issue-title">{{ issue.title }}</div>
+                        <div class="issue-description">{{ issue.description }}</div>
+                        <div class="issue-severity" :class="getSeverityClass(issue.severity)">
+                            {{ issue.severity }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div v-if="reviewResult.qualityIssues && reviewResult.qualityIssues.length > 0">
+                    <h3 style="color: #333; margin-bottom: 15px;">代码质量问题</h3>
+                    <div class="issue-item" v-for="issue in reviewResult.qualityIssues" :key="issue.id">
+                        <div class="issue-title">{{ issue.title }}</div>
+                        <div class="issue-description">{{ issue.description }}</div>
+                        <div class="issue-severity" :class="getSeverityClass(issue.severity)">
+                            {{ issue.severity }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div v-if="reviewResult.suggestions && reviewResult.suggestions.length > 0">
+                    <h3 style="color: #333; margin-bottom: 15px;">改进建议</h3>
+                    <div class="issue-item" v-for="suggestion in reviewResult.suggestions" :key="suggestion.id">
+                        <div class="issue-title">{{ suggestion.title }}</div>
+                        <div class="issue-description">{{ suggestion.description }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading" v-if="loading">
+                <div class="spinner"></div>
+                <p>正在分析代码，请稍候...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/php/php.min.js"></script>
+    
+    <script>
+        const { createApp } = Vue;
+        
+        createApp({
+            data() {
+                return {
+                    reviewType: 'COMPREHENSIVE',
+                    language: 'java',
+                    fileName: '',
+                    codeContent: '',
+                    loading: false,
+                    reviewResult: null
+                }
+            },
+            mounted() {
+                this.initCodeEditor();
+            },
+            methods: {
+                initCodeEditor() {
+                    const textarea = document.getElementById('codeContent');
+                    this.editor = CodeMirror.fromTextArea(textarea, {
+                        mode: this.getModeForLanguage(this.language),
+                        theme: 'monokai',
+                        lineNumbers: true,
+                        autoCloseBrackets: true,
+                        matchBrackets: true,
+                        indentUnit: 4,
+                        tabSize: 4,
+                        lineWrapping: true
+                    });
+                    
+                    this.editor.on('change', () => {
+                        this.codeContent = this.editor.getValue();
+                    });
+                },
+                getModeForLanguage(lang) {
+                    const modes = {
+                        'java': 'text/x-java-source',
+                        'javascript': 'javascript',
+                        'python': 'python',
+                        'cpp': 'text/x-c++src',
+                        'csharp': 'text/x-csharp',
+                        'php': 'php',
+                        'go': 'text/x-go',
+                        'rust': 'text/x-rustsrc'
+                    };
+                    return modes[lang] || 'text/plain';
+                },
+                async submitReview() {
+                    if (!this.codeContent.trim()) {
+                        this.$message.error('请输入代码内容');
+                        return;
+                    }
+                    
+                    this.loading = true;
+                    this.reviewResult = null;
+                    
+                    try {
+                        const response = await axios.post('/api/code-review/submit', {
+                            projectId: 'manual-review',
+                            mergeRequestId: 'manual-' + Date.now(),
+                            diffContent: this.codeContent,
+                            reviewType: this.reviewType,
+                            filePaths: [this.fileName],
+                            language: this.language,
+                            priority: 'MEDIUM'
+                        });
+                        
+                        this.reviewResult = response.data;
+                        this.$message.success('代码审查完成');
+                    } catch (error) {
+                        console.error('审查失败:', error);
+                        this.$message.error('代码审查失败: ' + (error.response?.data?.message || error.message));
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                clearForm() {
+                    this.reviewType = 'COMPREHENSIVE';
+                    this.language = 'java';
+                    this.fileName = '';
+                    this.codeContent = '';
+                    this.reviewResult = null;
+                    this.editor.setValue('');
+                },
+                getStatusClass() {
+                    if (!this.reviewResult) return '';
+                    const status = this.reviewResult.status;
+                    return {
+                        'status-success': status === 'COMPLETED',
+                        'status-warning': status === 'PROCESSING',
+                        'status-error': status === 'FAILED'
+                    };
+                },
+                getStatusText() {
+                    if (!this.reviewResult) return '';
+                    const statusMap = {
+                        'COMPLETED': '审查完成',
+                        'PROCESSING': '审查中',
+                        'FAILED': '审查失败'
+                    };
+                    return statusMap[this.reviewResult.status] || this.reviewResult.status;
+                },
+                getSeverityClass(severity) {
+                    return {
+                        'severity-high': severity === 'HIGH',
+                        'severity-medium': severity === 'MEDIUM',
+                        'severity-low': severity === 'LOW'
+                    };
+                }
+            },
+            watch: {
+                language(newLang) {
+                    if (this.editor) {
+                        this.editor.setOption('mode', this.getModeForLanguage(newLang));
+                    }
+                }
+            }
+        }).use(ElementPlus).mount('#app');
+    </script>
+</body>
+</html> 

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API文档 - CodeVoyant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .nav-pills .nav-link {
+            color: #495057;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-pills .nav-link:hover {
+            background-color: #e9ecef;
+        }
+        
+        .nav-pills .nav-link.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .endpoint {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .endpoint-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        
+        .method.get {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .method.post {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .method.put {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .method.delete {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: #495057;
+        }
+        
+        .endpoint-body {
+            padding: 20px;
+        }
+        
+        .endpoint-description {
+            margin-bottom: 20px;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .params-table {
+            margin-bottom: 20px;
+        }
+        
+        .params-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .response-example {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .section-title {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .badge {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: static;
+                margin-bottom: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-book"></i> CodeVoyant API 文档</h1>
+            <p>智能代码审查系统的完整API参考文档</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <!-- 侧边栏导航 -->
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <h5 class="mb-3">目录</h5>
+                    <nav class="nav flex-column nav-pills">
+                        <a class="nav-link active" href="#overview">概述</a>
+                        <a class="nav-link" href="#authentication">认证</a>
+                        <a class="nav-link" href="#code-review">代码审查</a>
+                        <a class="nav-link" href="#ai-models">AI模型管理</a>
+                        <a class="nav-link" href="#repositories">仓库管理</a>
+                        <a class="nav-link" href="#webhooks">Webhook</a>
+                        <a class="nav-link" href="#admin">后台管理</a>
+                        <a class="nav-link" href="#errors">错误处理</a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- 主要内容 -->
+            <div class="col-md-9">
+                <!-- 概述 -->
+                <div class="content" id="overview">
+                    <h2 class="section-title">概述</h2>
+                    <p>CodeVoyant API 提供了完整的代码审查功能，包括AI驱动的代码分析、安全检测、性能优化建议等。</p>
+                    
+                    <h4>基础信息</h4>
+                    <ul>
+                        <li><strong>基础URL:</strong> <code>http://localhost:8080</code></li>
+                        <li><strong>API版本:</strong> v1</li>
+                        <li><strong>内容类型:</strong> application/json</li>
+                        <li><strong>字符编码:</strong> UTF-8</li>
+                    </ul>
+                    
+                    <h4>支持的HTTP方法</h4>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <span class="method get">GET</span> 获取数据
+                        </div>
+                        <div class="col-md-3">
+                            <span class="method post">POST</span> 创建数据
+                        </div>
+                        <div class="col-md-3">
+                            <span class="method put">PUT</span> 更新数据
+                        </div>
+                        <div class="col-md-3">
+                            <span class="method delete">DELETE</span> 删除数据
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 认证 -->
+                <div class="content" id="authentication">
+                    <h2 class="section-title">认证</h2>
+                    <p>CodeVoyant API 支持多种认证方式：</p>
+                    
+                    <h4>1. API密钥认证</h4>
+                    <p>在请求头中添加API密钥：</p>
+                    <div class="code-block">
+Authorization: Bearer your_api_key_here
+                    </div>
+                    
+                    <h4>2. 访问令牌认证</h4>
+                    <p>对于仓库集成，使用访问令牌：</p>
+                    <div class="code-block">
+X-Access-Token: your_access_token_here
+                    </div>
+                </div>
+                
+                <!-- 代码审查 -->
+                <div class="content" id="code-review">
+                    <h2 class="section-title">代码审查</h2>
+                    
+                    <!-- 提交代码审查 -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-url">/api/review/submit</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                提交代码进行AI审查分析
+                            </div>
+                            
+                            <h5>请求参数</h5>
+                            <table class="table params-table">
+                                <thead>
+                                    <tr>
+                                        <th>参数</th>
+                                        <th>类型</th>
+                                        <th>必填</th>
+                                        <th>描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>projectId</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>项目ID</td>
+                                    </tr>
+                                    <tr>
+                                        <td>mergeRequestId</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>合并请求ID</td>
+                                    </tr>
+                                    <tr>
+                                        <td>diffContent</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>代码差异内容</td>
+                                    </tr>
+                                    <tr>
+                                        <td>reviewType</td>
+                                        <td>string</td>
+                                        <td>否</td>
+                                        <td>审查类型：BASIC/SECURITY/PERFORMANCE/COMPREHENSIVE</td>
+                                    </tr>
+                                    <tr>
+                                        <td>filePaths</td>
+                                        <td>array</td>
+                                        <td>否</td>
+                                        <td>文件路径列表</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <h5>请求示例</h5>
+                            <div class="code-block">
+{
+  "projectId": "my-project",
+  "mergeRequestId": "123",
+  "diffContent": "@@ -1,3 +1,4 @@\n public class UserService {\n     public User getUser(String id) {\n+        // 新增的安全检查\n+        if (id == null || id.isEmpty()) {\n             return null;\n         }\n         return userRepository.findById(id);\n     }\n }",
+  "reviewType": "COMPREHENSIVE",
+  "filePaths": ["src/main/java/UserService.java"]
+}
+                            </div>
+                            
+                            <h5>响应示例</h5>
+                            <div class="response-example">
+                                <pre><code>{
+  "success": true,
+  "data": {
+    "reviewId": "rev_123456",
+    "status": "COMPLETED",
+    "summary": "代码审查完成，发现3个问题",
+    "securityIssues": [
+      {
+        "id": "sec_001",
+        "title": "潜在的空指针异常",
+        "description": "建议在方法开始处添加空值检查",
+        "severity": "MEDIUM",
+        "line": 5
+      }
+    ],
+    "performanceIssues": [],
+    "qualityIssues": [
+      {
+        "id": "qual_001",
+        "title": "方法过长",
+        "description": "建议将方法拆分为更小的函数",
+        "severity": "LOW",
+        "line": 10
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "sug_001",
+        "title": "添加单元测试",
+        "description": "建议为getUser方法添加单元测试"
+      }
+    ]
+  }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 获取审查结果 -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="endpoint-url">/api/review/{reviewId}</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                获取指定审查ID的详细结果
+                            </div>
+                            
+                            <h5>路径参数</h5>
+                            <table class="table params-table">
+                                <thead>
+                                    <tr>
+                                        <th>参数</th>
+                                        <th>类型</th>
+                                        <th>描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>reviewId</td>
+                                        <td>string</td>
+                                        <td>审查ID</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI模型管理 -->
+                <div class="content" id="ai-models">
+                    <h2 class="section-title">AI模型管理</h2>
+                    
+                    <!-- 获取AI模型列表 -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="endpoint-url">/api/admin/ai-models</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                获取所有AI模型配置
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 创建AI模型 -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-url">/api/admin/ai-models</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                创建新的AI模型配置
+                            </div>
+                            
+                            <h5>请求参数</h5>
+                            <table class="table params-table">
+                                <thead>
+                                    <tr>
+                                        <th>参数</th>
+                                        <th>类型</th>
+                                        <th>必填</th>
+                                        <th>描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>modelName</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>模型名称</td>
+                                    </tr>
+                                    <tr>
+                                        <td>provider</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>提供商：ALIBABA/OPENAI/ANTHROPIC</td>
+                                    </tr>
+                                    <tr>
+                                        <td>apiKey</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>API密钥</td>
+                                    </tr>
+                                    <tr>
+                                        <td>temperature</td>
+                                        <td>number</td>
+                                        <td>否</td>
+                                        <td>温度参数(0-2)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>maxTokens</td>
+                                        <td>number</td>
+                                        <td>否</td>
+                                        <td>最大Token数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isActive</td>
+                                        <td>boolean</td>
+                                        <td>否</td>
+                                        <td>是否启用</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isDefault</td>
+                                        <td>boolean</td>
+                                        <td>否</td>
+                                        <td>是否设为默认</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 仓库管理 -->
+                <div class="content" id="repositories">
+                    <h2 class="section-title">仓库管理</h2>
+                    
+                    <!-- 获取仓库列表 -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="endpoint-url">/api/admin/repositories</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                获取所有仓库配置
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 创建仓库 -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-url">/api/admin/repositories</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                创建新的仓库配置
+                            </div>
+                            
+                            <h5>请求参数</h5>
+                            <table class="table params-table">
+                                <thead>
+                                    <tr>
+                                        <th>参数</th>
+                                        <th>类型</th>
+                                        <th>必填</th>
+                                        <th>描述</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>repositoryName</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>仓库名称</td>
+                                    </tr>
+                                    <tr>
+                                        <td>repositoryType</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>仓库类型：GITLAB/GITHUB/GITEE</td>
+                                    </tr>
+                                    <tr>
+                                        <td>repositoryUrl</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>仓库URL</td>
+                                    </tr>
+                                    <tr>
+                                        <td>accessToken</td>
+                                        <td>string</td>
+                                        <td>是</td>
+                                        <td>访问令牌</td>
+                                    </tr>
+                                    <tr>
+                                        <td>webhookSecret</td>
+                                        <td>string</td>
+                                        <td>否</td>
+                                        <td>Webhook密钥</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isActive</td>
+                                        <td>boolean</td>
+                                        <td>否</td>
+                                        <td>是否启用</td>
+                                    </tr>
+                                    <tr>
+                                        <td>autoReviewEnabled</td>
+                                        <td>boolean</td>
+                                        <td>否</td>
+                                        <td>是否启用自动审查</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Webhook -->
+                <div class="content" id="webhooks">
+                    <h2 class="section-title">Webhook</h2>
+                    
+                    <!-- GitLab Webhook -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-url">/api/webhook/gitlab</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                处理GitLab的Webhook事件
+                            </div>
+                            
+                            <h5>支持的事件</h5>
+                            <ul>
+                                <li><span class="badge bg-primary">Merge Request</span> 合并请求事件</li>
+                                <li><span class="badge bg-primary">Push</span> 推送事件</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- GitHub Webhook -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-url">/api/webhook/github</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                处理GitHub的Webhook事件
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gitee Webhook -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-url">/api/webhook/gitee</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                处理Gitee的Webhook事件
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 后台管理 -->
+                <div class="content" id="admin">
+                    <h2 class="section-title">后台管理</h2>
+                    
+                    <!-- 仪表板数据 -->
+                    <div class="endpoint">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="endpoint-url">/api/admin/dashboard</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div class="endpoint-description">
+                                获取后台管理仪表板数据
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 错误处理 -->
+                <div class="content" id="errors">
+                    <h2 class="section-title">错误处理</h2>
+                    
+                    <p>API使用标准的HTTP状态码来表示请求的结果：</p>
+                    
+                    <h4>常见状态码</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>状态码</th>
+                                <th>描述</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>200</td>
+                                <td>请求成功</td>
+                            </tr>
+                            <tr>
+                                <td>201</td>
+                                <td>创建成功</td>
+                            </tr>
+                            <tr>
+                                <td>400</td>
+                                <td>请求参数错误</td>
+                            </tr>
+                            <tr>
+                                <td>401</td>
+                                <td>未授权</td>
+                            </tr>
+                            <tr>
+                                <td>403</td>
+                                <td>禁止访问</td>
+                            </tr>
+                            <tr>
+                                <td>404</td>
+                                <td>资源不存在</td>
+                            </tr>
+                            <tr>
+                                <td>500</td>
+                                <td>服务器内部错误</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>错误响应格式</h4>
+                    <div class="code-block">
+{
+  "error": "错误类型",
+  "message": "详细错误信息",
+  "timestamp": "2024-01-01T12:00:00Z",
+  "path": "/api/review/submit"
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // 返回顶部
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // 导航高亮
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.content');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
