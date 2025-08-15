@@ -6,12 +6,15 @@
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Security](https://img.shields.io/badge/Security-A%20Grade-success.svg)](SECURITY_FIXES.md)
+[![Build](https://github.com/aias00/AstraLint/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/aias00/AstraLint/actions/workflows/build-and-test.yml)
+[![Quality](https://github.com/aias00/AstraLint/actions/workflows/code-quality.yml/badge.svg)](https://github.com/aias00/AstraLint/actions/workflows/code-quality.yml)
+[![Security](https://github.com/aias00/AstraLint/actions/workflows/security.yml/badge.svg)](https://github.com/aias00/AstraLint/actions/workflows/security.yml)
 
 **AI 驱动的智能代码审查系统**
 
 集成多平台 Webhook，提供专业的代码质量分析、安全检查和性能优化建议
 
-[快速开始](#-快速开始) • [功能特性](#-功能特性) • [部署指南](#-部署指南) • [API 文档](#-api-文档) • [安全报告](SECURITY_FIXES.md)
+[快速开始](#-快速开始) • [功能特性](#-功能特性) • [部署指南](#-部署指南) • [API 文档](#-api-文档) • [CI/CD](CI_SETUP.md) • [安全报告](SECURITY_FIXES.md)
 
 </div>
 
@@ -316,6 +319,49 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 ```
+
+---
+
+## 🔄 CI/CD 集成
+
+AstraLint 采用现代化的 CI/CD 流程，确保代码质量和部署可靠性：
+
+### 🚀 自动化流程
+
+- **构建测试**: 自动编译、单元测试、集成测试
+- **代码质量**: Checkstyle、SpotBugs、PMD 静态分析
+- **安全扫描**: OWASP 依赖检查、CodeQL 语义分析
+- **自动部署**: Staging/Production 环境自动化部署
+
+### 📊 快速命令
+
+```bash
+# 查看所有可用命令
+make help
+
+# 完整构建流程
+make build
+
+# 代码质量检查
+make quality
+
+# 安全扫描
+make security-check
+
+# Docker 构建
+make docker-build
+
+# 完整 CI 流程
+make ci-full
+```
+
+### 🔗 状态徽章
+
+- [![Build](https://github.com/aias00/AstraLint/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/aias00/AstraLint/actions/workflows/build-and-test.yml) 构建状态
+- [![Quality](https://github.com/aias00/AstraLint/actions/workflows/code-quality.yml/badge.svg)](https://github.com/aias00/AstraLint/actions/workflows/code-quality.yml) 代码质量
+- [![Security](https://github.com/aias00/AstraLint/actions/workflows/security.yml/badge.svg)](https://github.com/aias00/AstraLint/actions/workflows/security.yml) 安全检查
+
+> 详细的 CI/CD 配置和使用指南请参阅 [CI_SETUP.md](CI_SETUP.md)
 
 ---
 
