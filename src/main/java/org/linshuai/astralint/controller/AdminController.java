@@ -1,6 +1,5 @@
 package org.linshuai.astralint.controller;
 
-
 import org.linshuai.astralint.entity.AiModelConfig;
 import org.linshuai.astralint.entity.RepositoryConfig;
 import org.linshuai.astralint.service.AiModelConfigService;
@@ -20,19 +19,18 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "*")
 public class AdminController {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
-    
+
     @Autowired
     private AiModelConfigService aiModelConfigService;
-    
+
     @Autowired
     private RepositoryConfigService repositoryConfigService;
-    
+
     // ==================== AI模型配置管理 ====================
-    
+
     /**
      * 获取所有AI模型配置
      */
@@ -46,7 +44,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 获取激活的AI模型配置
      */
@@ -60,7 +58,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 根据ID获取AI模型配置
      */
@@ -75,7 +73,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 创建AI模型配置
      */
@@ -92,7 +90,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 更新AI模型配置
      */
@@ -109,7 +107,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 删除AI模型配置
      */
@@ -126,7 +124,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 设置默认AI模型
      */
@@ -143,7 +141,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 切换AI模型状态
      */
@@ -160,9 +158,9 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     // ==================== 仓库配置管理 ====================
-    
+
     /**
      * 获取所有仓库配置
      */
@@ -176,7 +174,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 获取激活的仓库配置
      */
@@ -190,7 +188,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 根据ID获取仓库配置
      */
@@ -205,7 +203,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 创建仓库配置
      */
@@ -222,12 +220,13 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 更新仓库配置
      */
     @PutMapping("/repositories/{id}")
-    public ResponseEntity<RepositoryConfig> updateRepository(@PathVariable Long id, @RequestBody RepositoryConfig config) {
+    public ResponseEntity<RepositoryConfig> updateRepository(@PathVariable Long id,
+            @RequestBody RepositoryConfig config) {
         try {
             RepositoryConfig updated = repositoryConfigService.updateRepositoryConfig(id, config);
             return ResponseEntity.ok(updated);
@@ -239,7 +238,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 删除仓库配置
      */
@@ -256,7 +255,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 切换仓库状态
      */
@@ -273,7 +272,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 切换自动审查状态
      */
@@ -290,7 +289,7 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 测试仓库连接
      */
@@ -310,9 +309,9 @@ public class AdminController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     // ==================== 系统概览 ====================
-    
+
     /**
      * 获取系统概览信息
      */
@@ -320,14 +319,14 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> getDashboardInfo() {
         try {
             Map<String, Object> dashboard = new HashMap<>();
-            
+
             // AI模型统计
             List<AiModelConfig> allModels = aiModelConfigService.getAllModelConfigs();
             List<AiModelConfig> activeModels = aiModelConfigService.getActiveModelConfigs();
             dashboard.put("totalAiModels", allModels.size());
             dashboard.put("activeModels", activeModels.size());
             dashboard.put("defaultModel", aiModelConfigService.getDefaultModelConfig().orElse(null));
-            
+
             // 仓库统计
             List<RepositoryConfig> allRepositories = repositoryConfigService.getAllRepositoryConfigs();
             List<RepositoryConfig> activeRepositories = repositoryConfigService.getActiveRepositoryConfigs();
@@ -335,18 +334,18 @@ public class AdminController {
             dashboard.put("totalRepositories", allRepositories.size());
             dashboard.put("activeRepositories", activeRepositories.size());
             dashboard.put("autoReviewRepositories", autoReviewRepositories.size());
-            
+
             // 添加默认值以确保前端可以正确显示
             dashboard.put("totalReviews", 0);
             dashboard.put("totalIssues", 0);
-            
+
             return ResponseEntity.ok(dashboard);
         } catch (Exception e) {
             logger.error("获取系统概览失败", e);
             return ResponseEntity.internalServerError().build();
         }
     }
-    
+
     /**
      * 健康检查
      */
@@ -357,4 +356,4 @@ public class AdminController {
         health.put("timestamp", System.currentTimeMillis());
         return ResponseEntity.ok(health);
     }
-} 
+}

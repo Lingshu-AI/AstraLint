@@ -1,7 +1,7 @@
 package org.linshuai.astralint.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -9,16 +9,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    
+
     /**
-     * 配置CORS
+     * 配置静态资源处理
      */
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .maxAge(3600);
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 静态资源映射
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/")
+                .setCachePeriod(3600)
+                .resourceChain(true);
+
+        // 管理后台静态资源映射
+        registry.addResourceHandler("/admin/**")
+                .addResourceLocations("classpath:/static/admin/")
+                .setCachePeriod(3600)
+                .resourceChain(true);
     }
-} 
+}

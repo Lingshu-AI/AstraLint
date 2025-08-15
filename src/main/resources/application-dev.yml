@@ -1,0 +1,63 @@
+# 开发环境配置
+server:
+  port: 18080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:codevoyant
+    driverClassName: org.h2.Driver
+    username: sa
+    password: dev_password_123
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false # 改为false，避免SQL泄露
+    properties:
+      hibernate:
+        format_sql: false
+  ai:
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY:your_api_key_here}
+      base-url: https://dashscope.aliyuncs.com
+      embedding:
+        options:
+          model: text-embedding-v1
+    chat:
+      client:
+        enabled: true
+
+gitlab:
+  url: ${GITLAB_URL:http://localhost:8929}
+  token: ${GITLAB_TOKEN:your_access_token_here}
+  webhook:
+    secret: ${GITLAB_WEBHOOK_SECRET:your_webhook_secret_here}
+
+ai:
+  code-review:
+    enabled: true
+    model: qwen-plus
+    max-file-size: 10000
+    timeout: 30000
+
+# 安全配置
+security:
+  jwt:
+    secret: ${JWT_SECRET:AstraLint_Development_Secret_Key_Must_Be_At_Least_256_Bits_Long}
+    expiration: ${JWT_EXPIRATION:86400000} # 24小时
+  default:
+    admin:
+      username: ${ADMIN_USERNAME:admin}
+      password: ${ADMIN_PASSWORD:admin123}
+
+logging:
+  level:
+    org.linshuai.astralint: INFO
+    org.springframework.ai: WARN
+    org.springframework.security: DEBUG

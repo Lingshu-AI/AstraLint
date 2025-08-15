@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AstraLint - AI驱动的代码审查系统" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>代码审查 - AstraLint</title>
+
+    <!-- 使用固定版本的CDN资源，并添加SRI验证 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      :root {
+        --primary-color: #667eea;
+        --secondary-color: #764ba2;
+        --success-color: #28a745;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --info-color: #17a2b8;
+        --light-color: #f8f9fa;
+        --dark-color: #343a40;
+        --border-radius: 8px;
+        --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: var(--light-color);
+        line-height: 1.6;
+        color: var(--dark-color);
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        color: white;
+        padding: 1.5rem 0;
+        box-shadow: var(--box-shadow);
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .back-btn {
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid white;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+
+      .back-btn:hover {
+        background: white;
+        color: var(--primary-color);
+        transform: translateY(-2px);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+      }
+
+      .review-form {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: var(--box-shadow);
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--dark-color);
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e1e5e9;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+        font-family: inherit;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .code-editor {
+        border: 2px solid #e1e5e9;
+        border-radius: var(--border-radius);
+        min-height: 300px;
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+        font-size: 14px;
+        padding: 1rem;
+        resize: vertical;
+        background: #f8f9fa;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 120px;
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5a6fd8;
+        transform: translateY(-2px);
+      }
+
+      .btn-success {
+        background: var(--success-color);
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #218838;
+        transform: translateY(-2px);
+      }
+
+      .btn-warning {
+        background: var(--warning-color);
+        color: var(--dark-color);
+      }
+
+      .btn-warning:hover {
+        background: #e0a800;
+        transform: translateY(-2px);
+      }
+
+      .btn-info {
+        background: var(--info-color);
+        color: white;
+      }
+
+      .btn-info:hover {
+        background: #138496;
+        transform: translateY(-2px);
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+      }
+
+      .result-section {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: var(--box-shadow);
+        margin-top: 2rem;
+        display: none;
+      }
+
+      .result-section.show {
+        display: block;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+      }
+
+      .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+      }
+
+      .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+      }
+
+      .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+        color: #856404;
+      }
+
+      .help-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+      }
+
+      @media (max-width: 768px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .btn-group {
+          flex-direction: column;
+        }
+
+        .header-content {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .container {
+          margin: 1rem auto;
+          padding: 0 1rem;
+        }
+
+        .review-form {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <h1><i class="fas fa-code"></i> AstraLint 代码审查</h1>
+        <a href="/" class="back-btn"> <i class="fas fa-home"></i> 返回首页 </a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="review-form">
+        <h2><i class="fas fa-search"></i> 智能代码审查</h2>
+        <p class="help-text">
+          上传您的代码变更，AI将为您提供专业的代码审查意见
+        </p>
+
+        <form id="reviewForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="projectId">项目ID *</label>
+              <input
+                type="text"
+                id="projectId"
+                name="projectId"
+                class="form-control"
+                required
+                maxlength="100"
+                placeholder="输入项目标识"
+              />
+              <div class="help-text">项目的唯一标识符</div>
+            </div>
+
+            <div class="form-group">
+              <label for="mergeRequestId">合并请求ID *</label>
+              <input
+                type="text"
+                id="mergeRequestId"
+                name="mergeRequestId"
+                class="form-control"
+                required
+                maxlength="50"
+                placeholder="输入MR/PR编号"
+              />
+              <div class="help-text">合并请求或Pull Request的编号</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reviewType">审查类型</label>
+              <select id="reviewType" name="reviewType" class="form-control">
+                <option value="COMPREHENSIVE">综合审查</option>
+                <option value="SECURITY">安全检查</option>
+                <option value="PERFORMANCE">性能优化</option>
+                <option value="BASIC">基础审查</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="language">编程语言</label>
+              <select id="language" name="language" class="form-control">
+                <option value="">自动检测</option>
+                <option value="java">Java</option>
+                <option value="javascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
+                <option value="python">Python</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="cpp">C++</option>
+                <option value="csharp">C#</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="diffContent">代码差异内容 *</label>
+            <textarea
+              id="diffContent"
+              name="diffContent"
+              class="code-editor"
+              required
+              maxlength="1000000"
+              placeholder="粘贴 git diff 输出或代码变更内容..."
+            ></textarea>
+            <div class="help-text">支持git diff格式，最大1MB</div>
+          </div>
+
+          <div class="btn-group">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              data-action="comprehensive"
+            >
+              <i class="fas fa-play"></i> 开始审查
+            </button>
+            <button type="button" class="btn btn-success" data-action="quick">
+              <i class="fas fa-bolt"></i> 快速审查
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              data-action="security"
+            >
+              <i class="fas fa-shield-alt"></i> 安全检查
+            </button>
+            <button
+              type="button"
+              class="btn btn-info"
+              data-action="performance"
+            >
+              <i class="fas fa-tachometer-alt"></i> 性能分析
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>AI正在审查您的代码，请稍候...</p>
+      </div>
+
+      <div class="result-section" id="resultSection">
+        <h3><i class="fas fa-file-alt"></i> 审查结果</h3>
+        <div id="resultContent"></div>
+      </div>
+    </div>
+
+    <script>
+      // 安全的JavaScript实现
+      (function () {
+        "use strict";
+
+        const form = document.getElementById("reviewForm");
+        const loading = document.getElementById("loading");
+        const resultSection = document.getElementById("resultSection");
+        const resultContent = document.getElementById("resultContent");
+
+        // 输入验证
+        function validateInput(data) {
+          if (!data.projectId || data.projectId.length > 100) {
+            throw new Error("项目ID不能为空且长度不能超过100个字符");
+          }
+          if (!data.mergeRequestId || data.mergeRequestId.length > 50) {
+            throw new Error("合并请求ID不能为空且长度不能超过50个字符");
+          }
+          if (!data.diffContent || data.diffContent.length > 1000000) {
+            throw new Error("代码差异内容不能为空且大小不能超过1MB");
+          }
+          return true;
+        }
+
+        // 显示错误消息
+        function showError(message) {
+          resultContent.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>错误：</strong> ${escapeHtml(message)}
+                    </div>
+                `;
+          resultSection.classList.add("show");
+          loading.classList.remove("show");
+        }
+
+        // 显示成功消息
+        function showSuccess(content) {
+          resultContent.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>审查完成</strong>
+                    </div>
+                    <div style="white-space: pre-wrap; font-family: monospace; background: #f8f9fa; padding: 1rem; border-radius: 4px; margin-top: 1rem;">
+                        ${escapeHtml(content)}
+                    </div>
+                `;
+          resultSection.classList.add("show");
+          loading.classList.remove("show");
+        }
+
+        // XSS防护：转义HTML
+        function escapeHtml(text) {
+          const div = document.createElement("div");
+          div.textContent = text;
+          return div.innerHTML;
+        }
+
+        // API调用
+        async function callAPI(endpoint, data) {
+          try {
+            validateInput(data);
+
+            const response = await fetch(`/api/code-review/${endpoint}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({}));
+              throw new Error(
+                errorData.message ||
+                  `HTTP ${response.status}: ${response.statusText}`
+              );
+            }
+
+            const result = await response.text();
+            return result;
+          } catch (error) {
+            throw error;
+          }
+        }
+
+        // 处理表单提交
+        async function handleSubmit(action) {
+          const formData = new FormData(form);
+          const data = {
+            projectId: formData.get("projectId").trim(),
+            mergeRequestId: formData.get("mergeRequestId").trim(),
+            diffContent: formData.get("diffContent").trim(),
+            reviewType: formData.get("reviewType"),
+            language: formData.get("language"),
+          };
+
+          loading.classList.add("show");
+          resultSection.classList.remove("show");
+
+          try {
+            let endpoint;
+            switch (action) {
+              case "quick":
+                endpoint = "quick";
+                break;
+              case "security":
+                endpoint = "security";
+                break;
+              case "performance":
+                endpoint = "performance";
+                break;
+              default:
+                endpoint = "submit";
+                break;
+            }
+
+            const result = await callAPI(endpoint, data);
+            showSuccess(result);
+          } catch (error) {
+            showError(error.message);
+          }
+        }
+
+        // 事件监听器
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          handleSubmit("comprehensive");
+        });
+
+        // 按钮点击处理
+        document.querySelectorAll(".btn[data-action]").forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            if (this.type !== "submit") {
+              e.preventDefault();
+              handleSubmit(this.dataset.action);
+            }
+          });
+        });
+
+        // 防止多次提交
+        let isSubmitting = false;
+        form.addEventListener("submit", function () {
+          if (isSubmitting) return false;
+          isSubmitting = true;
+          setTimeout(() => (isSubmitting = false), 2000);
+        });
+      })();
+    </script>
+  </body>
+</html>

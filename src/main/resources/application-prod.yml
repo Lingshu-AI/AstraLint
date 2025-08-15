@@ -1,0 +1,79 @@
+# 生产环境配置
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+  error:
+    include-stacktrace: never
+    include-message: never
+
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:h2:file:./data/codevoyant;DB_CLOSE_ON_EXIT=FALSE}
+    driverClassName: org.h2.Driver
+    username: ${DATABASE_USERNAME:admin}
+    password: ${DATABASE_PASSWORD}
+  h2:
+    console:
+      enabled: false # 生产环境禁用H2控制台
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: validate # 生产环境使用validate，避免数据丢失
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  ai:
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY}
+      base-url: ${DASHSCOPE_BASE_URL:https://dashscope.aliyuncs.com}
+      embedding:
+        options:
+          model: ${AI_EMBEDDING_MODEL:text-embedding-v1}
+    chat:
+      client:
+        enabled: true
+
+gitlab:
+  url: ${GITLAB_URL}
+  token: ${GITLAB_TOKEN}
+  webhook:
+    secret: ${GITLAB_WEBHOOK_SECRET}
+
+github:
+  token: ${GITHUB_TOKEN}
+  webhook:
+    secret: ${GITHUB_WEBHOOK_SECRET}
+
+gitee:
+  token: ${GITEE_TOKEN}
+  webhook:
+    secret: ${GITEE_WEBHOOK_SECRET}
+
+ai:
+  code-review:
+    enabled: ${AI_CODE_REVIEW_ENABLED:true}
+    model: ${AI_MODEL:qwen-plus}
+    max-file-size: ${AI_MAX_FILE_SIZE:10000}
+    timeout: ${AI_TIMEOUT:30000}
+
+# 安全配置
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION:86400000} # 24小时
+  api:
+    rate-limit: ${API_RATE_LIMIT:100} # 每分钟100次请求
+
+logging:
+  level:
+    org.linshuai.astralint: INFO
+    org.springframework.ai: WARN
+    org.springframework.security: INFO
+    org.hibernate.SQL: OFF
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /var/log/astralint/application.log
