@@ -1,273 +1,597 @@
-# CodeVoyant - 智能代码审查系统
+# 🌟 AstraLint
 
-基于Spring AI Alibaba框架的智能代码审查系统，提供自动化的代码质量分析、安全检查、性能优化建议等功能。
+<div align="center">
+
+[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Security](https://img.shields.io/badge/Security-A%20Grade-success.svg)](SECURITY_FIXES.md)
+
+**AI 驱动的智能代码审查系统**
+
+集成多平台 Webhook，提供专业的代码质量分析、安全检查和性能优化建议
+
+[快速开始](#-快速开始) • [功能特性](#-功能特性) • [部署指南](#-部署指南) • [API 文档](#-api-文档) • [安全报告](SECURITY_FIXES.md)
+
+</div>
+
+---
 
 ## 🚀 功能特性
 
-### 核心功能
-- **🤖 智能代码审查**: 使用AI模型自动分析代码变更
-- **🔒 安全检查**: 识别潜在的安全漏洞和风险
-- **⚡ 性能优化**: 提供代码性能改进建议
-- **📋 代码摘要**: 自动生成代码变更摘要
-- **🔍 综合报告**: 生成详细的代码审查报告
-- **⚙️ 后台管理**: 完整的配置管理界面
+### 🤖 智能代码审查
 
-### 审查类型
-- **基础审查 (BASIC)**: 代码质量和最佳实践检查
-- **安全检查 (SECURITY)**: 安全漏洞和风险识别
-- **性能优化 (PERFORMANCE)**: 性能瓶颈和改进建议
-- **综合审查 (COMPREHENSIVE)**: 全面的代码审查分析
+- **多维度分析**: 代码质量、安全漏洞、性能优化、最佳实践
+- **AI 驱动**: 基于阿里云通义千问，提供专业的审查意见
+- **灵活配置**: 支持基础、安全、性能、综合等多种审查类型
+- **实时反馈**: 异步处理，快速响应
 
-### 后台管理功能
-- **AI模型管理**: 支持多AI模型配置和管理
-- **仓库管理**: 支持GitLab、GitHub、Gitee等仓库配置
-- **系统监控**: 实时系统状态和统计信息
-- **配置管理**: 灵活的配置参数调整
+### 🔗 多平台集成
 
-## 🛠️ 技术栈
+- **GitLab**: 完整的 MR 审查流程
+- **GitHub**: PR 自动审查
+- **Gitee**: 国内代码托管平台支持
+- **Webhook**: 自动触发，无缝集成
 
-- **Spring Boot 3.3.1**: 主框架
-- **Spring AI**: AI集成框架
-- **Spring AI Alibaba DashScope**: 阿里云通义千问AI模型
-- **Spring Data JPA**: 数据持久化
-- **H2 Database**: 内存数据库（开发环境）
-- **GitLab4J**: GitLab API集成
-- **Jackson**: JSON处理
-- **Maven**: 依赖管理
-- **Bootstrap 5**: 前端UI框架
+### 🛡️ 企业级安全
 
-## 📋 系统要求
+- **JWT 认证**: 无状态认证，支持角色权限
+- **签名验证**: HMAC-SHA256 Webhook 验证
+- **安全头**: CSP、HSTS、XSS 防护
+- **输入验证**: 全面的参数校验和清理
 
-- Java 17+
-- Maven 3.6+
-- 阿里云DashScope API密钥
+### 📊 管理控制台
 
-## 🚀 快速开始
+- **配置管理**: AI 模型、仓库配置
+- **实时监控**: 系统状态、审查统计
+- **用户友好**: 现代化 Web 界面
 
-### 1. 克隆项目
+---
+
+## 🏃 快速开始
+
+### 📋 环境要求
+
+- **Java**: 17 或更高版本
+- **Maven**: 3.6+
+- **内存**: 最小 512MB，推荐 1GB+
+- **API 密钥**: 阿里云 DashScope API Key
+
+### ⚡ 一键启动
+
 ```bash
-git clone <repository-url>
-cd CodeVoyant
-```
+# 1. 克隆项目
+git clone https://github.com/yourusername/AstraLint.git
+cd AstraLint
 
-### 2. 配置环境
-编辑 `src/main/resources/application.properties`:
+# 2. 配置环境变量
+cp env.example .env
+# 编辑 .env 文件，设置必要参数
 
-```properties
-# 阿里云DashScope配置
-spring.ai.alibaba.dashscope.api-key=your_dashscope_api_key_here
-spring.ai.alibaba.dashscope.chat.options.model=qwen-plus
-spring.ai.alibaba.dashscope.chat.options.temperature=0.7
-spring.ai.alibaba.dashscope.chat.options.max-tokens=4000
-
-# GitLab配置
-gitlab.url=http://localhost:8929
-gitlab.token=your_access_token_here
-gitlab.webhook.secret=your_webhook_secret_here
-
-# AI代码审查配置
-ai.code-review.enabled=true
-ai.code-review.model=qwen-plus
-ai.code-review.max-file-size=10000
-ai.code-review.timeout=30000
-```
-
-### 3. 运行应用
-```bash
+# 3. 启动应用
 mvn spring-boot:run
 ```
 
-应用将在 `http://localhost:8080` 启动。
+### 🌐 访问地址
 
-### 4. 访问后台管理
-打开浏览器访问：`http://localhost:8080/admin/`
+- **主页**: http://localhost:8080
+- **代码审查**: http://localhost:8080/secure-review.html
+- **管理控制台**: http://localhost:8080/admin/ (需要登录)
+- **健康检查**: http://localhost:8080/actuator/health
 
-## 📡 API接口
+### 🔐 默认账户
 
-### 代码审查API
-- `POST /api/code-review/submit` - 提交代码审查请求
-- `POST /api/code-review/quick` - 快速代码审查
-- `POST /api/code-review/security` - 安全检查
-- `POST /api/code-review/performance` - 性能优化建议
-- `POST /api/code-review/summary` - 生成代码摘要
-- `GET /api/code-review/{reviewId}` - 获取审查结果
-- `GET /api/code-review/health` - 健康检查
-
-### 后台管理API
-- `GET /api/admin/dashboard` - 获取系统概览
-- `GET /api/admin/ai-models` - 获取所有AI模型
-- `POST /api/admin/ai-models` - 创建AI模型
-- `PUT /api/admin/ai-models/{id}` - 更新AI模型
-- `DELETE /api/admin/ai-models/{id}` - 删除AI模型
-- `POST /api/admin/ai-models/{id}/set-default` - 设置默认模型
-- `POST /api/admin/ai-models/{id}/toggle-status` - 切换模型状态
-- `GET /api/admin/repositories` - 获取所有仓库
-- `POST /api/admin/repositories` - 创建仓库
-- `PUT /api/admin/repositories/{id}` - 更新仓库
-- `DELETE /api/admin/repositories/{id}` - 删除仓库
-- `POST /api/admin/repositories/{id}/toggle-status` - 切换仓库状态
-- `POST /api/admin/repositories/{id}/toggle-auto-review` - 切换自动审查
-- `POST /api/admin/repositories/{id}/test-connection` - 测试仓库连接
-
-## 🔧 配置说明
-
-### AI模型配置
-- `spring.ai.alibaba.dashscope.api-key`: 阿里云DashScope API密钥
-- `spring.ai.alibaba.dashscope.chat.options.model`: AI模型名称 (默认: qwen-plus)
-- `spring.ai.alibaba.dashscope.chat.options.temperature`: 生成温度 (0.0-1.0)
-- `spring.ai.alibaba.dashscope.chat.options.max-tokens`: 最大生成token数
-
-### 代码审查配置
-- `ai.code-review.enabled`: 是否启用AI代码审查
-- `ai.code-review.model`: 使用的AI模型
-- `ai.code-review.max-file-size`: 最大文件大小限制
-- `ai.code-review.timeout`: AI请求超时时间
-
-### 数据库配置
-- `spring.datasource.url`: 数据库连接URL
-- `spring.jpa.hibernate.ddl-auto`: 数据库表结构策略
-- `spring.h2.console.enabled`: 启用H2控制台
-
-## 🖥️ 后台管理界面
-
-### 系统概览
-- 显示AI模型和仓库统计信息
-- 系统状态监控
-- 快速操作入口
-
-### AI模型管理
-- 支持多AI提供商（阿里云、OpenAI、Anthropic等）
-- 模型参数配置（温度、最大token数、超时时间等）
-- 模型状态管理（激活/停用）
-- 默认模型设置
-
-### 仓库管理
-- 支持多种仓库类型（GitLab、GitHub、Gitee）
-- 仓库连接配置
-- Webhook设置
-- 自动审查开关
-- 连接测试功能
-
-## 📊 审查报告示例
-
-### 综合审查报告
 ```
-# 🔍 综合代码审查报告
-
-## 📋 代码变更摘要
-
-### src/main/java/Example.java
-主要功能变更概述：添加了新的用户认证功能
-影响范围评估：影响用户登录模块
-测试建议：需要添加单元测试和集成测试
-
-## 🔒 代码安全检查报告
-
-### src/main/java/Example.java
-🚨 发现SQL注入风险：直接拼接SQL语句
-建议：使用参数化查询或ORM框架
-
-## ⚡ 代码优化建议
-
-### src/main/java/Example.java
-- 建议使用StringBuilder替代String拼接
-- 考虑添加缓存机制提高性能
-
-## 🤖 智能代码审查结果
-
-### 📁 文件: src/main/java/Example.java
-- ✅ 代码结构清晰，命名规范
-- ⚠️ 缺少异常处理
-- 建议添加日志记录
+用户名: admin
+密码: admin123
 ```
 
-## 🔄 集成GitLab
+> ⚠️ **安全提醒**: 生产环境请务必修改默认密码
 
-### Webhook配置
-1. 在GitLab项目中配置Webhook
-2. URL: `http://your-server:8080/api/webhook/gitlab`
-3. 选择触发事件: Merge Request events
-4. 设置Secret Token
+---
 
-### 自动审查流程
-1. 开发者创建Merge Request
-2. GitLab发送Webhook事件
-3. CodeVoyant自动触发代码审查
-4. AI分析代码并生成报告
-5. 在Merge Request中添加审查评论
+## 📝 配置说明
 
-## 🛡️ 安全考虑
+### 🔧 必需配置
 
-- API密钥存储在数据库中（生产环境建议加密）
-- 支持CORS配置
-- 请求超时和重试机制
-- 文件大小限制防止资源耗尽
-- 数据库访问控制
+创建 `.env` 文件并设置以下环境变量：
 
-## 🚀 部署
-
-### 开发环境
 ```bash
-# 使用H2内存数据库
-mvn spring-boot:run
+# AI 服务配置 (必需)
+DASHSCOPE_API_KEY=your_dashscope_api_key_here
+
+# JWT 安全配置 (必需)
+JWT_SECRET=your_jwt_secret_at_least_256_bits_long
+
+# 数据库配置 (生产环境)
+DATABASE_PASSWORD=your_secure_password
 ```
 
-### 生产环境
+### 🎛️ 可选配置
+
 ```bash
-# 使用外部数据库（MySQL/PostgreSQL）
-# 修改application.properties中的数据库配置
-mvn clean package
-java -jar target/CodeVoyant-1.0-SNAPSHOT.jar
+# GitLab 集成
+GITLAB_URL=http://localhost:8929
+GITLAB_TOKEN=your_gitlab_token
+GITLAB_WEBHOOK_SECRET=your_webhook_secret
+
+# GitHub 集成
+GITHUB_TOKEN=your_github_token
+GITHUB_WEBHOOK_SECRET=your_github_secret
+
+# Gitee 集成
+GITEE_TOKEN=your_gitee_token
+GITEE_WEBHOOK_SECRET=your_gitee_secret
+
+# 管理员账户
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_admin_password
 ```
 
-### Docker部署
+---
+
+## 🔌 API 文档
+
+### 🔐 认证接口
+
+#### 登录获取 Token
+
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin123"
+}
+```
+
+**响应**:
+
+```json
+{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "username": "admin",
+  "roles": ["ADMIN", "USER"]
+}
+```
+
+### 🔍 代码审查接口
+
+#### 快速审查 (无需认证)
+
+```http
+POST /api/code-review/quick
+Content-Type: application/json
+
+{
+    "projectId": "my-project",
+    "mergeRequestId": "123",
+    "diffContent": "diff --git a/src/main.js...",
+    "reviewType": "COMPREHENSIVE"
+}
+```
+
+#### 提交审查请求 (需要认证)
+
+```http
+POST /api/code-review/submit
+Authorization: Bearer <your-jwt-token>
+Content-Type: application/json
+
+{
+    "projectId": "my-project",
+    "mergeRequestId": "123",
+    "diffContent": "git diff content...",
+    "reviewType": "SECURITY",
+    "language": "java"
+}
+```
+
+#### 审查类型说明
+
+- `BASIC`: 基础代码审查
+- `SECURITY`: 安全漏洞检查
+- `PERFORMANCE`: 性能优化建议
+- `COMPREHENSIVE`: 综合全面审查
+
+### 🪝 Webhook 接口
+
+#### GitLab Webhook
+
+```http
+POST /api/webhook/gitlab
+X-Gitlab-Event: Merge Request Hook
+X-Gitlab-Token: your_webhook_secret
+Content-Type: application/json
+
+{
+    "object_kind": "merge_request",
+    "object_attributes": {
+        "action": "opened",
+        "iid": 123
+    },
+    "project": {
+        "id": 456
+    }
+}
+```
+
+#### GitHub Webhook
+
+```http
+POST /api/webhook/github
+X-GitHub-Event: pull_request
+X-Hub-Signature-256: sha256=<signature>
+Content-Type: application/json
+
+{
+    "action": "opened",
+    "pull_request": {
+        "number": 123
+    },
+    "repository": {
+        "full_name": "owner/repo"
+    }
+}
+```
+
+---
+
+## 🚀 部署指南
+
+### 🐳 Docker 部署
+
 ```bash
 # 构建镜像
-docker build -t codevoyant .
+docker build -t astralint:latest .
 
 # 运行容器
-docker run -p 8080:8080 \
-  -e SPRING_AI_ALIBABA_DASHSCOPE_API_KEY=your_key \
-  -e SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/codevoyant \
-  codevoyant
+docker run -d \
+  --name astralint \
+  -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=prod \
+  -e DASHSCOPE_API_KEY=your_api_key \
+  -e JWT_SECRET=your_jwt_secret \
+  -e DATABASE_PASSWORD=your_db_password \
+  astralint:latest
 ```
 
-### 生产环境配置
-- 使用HTTPS
-- 配置负载均衡
-- 设置监控和日志
-- 数据库持久化审查结果
-- 定期备份配置数据
+### 🎯 生产环境部署
 
-## 📝 使用指南
+#### 1. 环境准备
 
-### 1. 首次使用
-1. 启动应用后访问 `http://localhost:8080/admin/`
-2. 在AI模型管理中配置你的AI模型API密钥
-3. 在仓库管理中添加你的代码仓库
-4. 配置Webhook以启用自动审查
-
-### 2. 手动代码审查
 ```bash
-curl -X POST http://localhost:8080/api/code-review/quick \
+# 创建生产配置
+export SPRING_PROFILES_ACTIVE=prod
+export DATABASE_URL=jdbc:mysql://localhost:3306/astralint
+export DATABASE_USERNAME=astralint_user
+export DATABASE_PASSWORD=secure_password
+```
+
+#### 2. 反向代理配置 (Nginx)
+
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name yourdomain.com;
+
+    ssl_certificate /path/to/certificate.crt;
+    ssl_certificate_key /path/to/private.key;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+#### 3. 系统服务配置
+
+```ini
+# /etc/systemd/system/astralint.service
+[Unit]
+Description=AstraLint Code Review Service
+After=network.target
+
+[Service]
+Type=simple
+User=astralint
+WorkingDirectory=/opt/astralint
+ExecStart=/usr/bin/java -jar astralint.jar
+EnvironmentFile=/opt/astralint/.env
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+---
+
+## 🛠️ 开发指南
+
+### 📁 项目结构
+
+```
+AstraLint/
+├── src/main/java/org/linshuai/astralint/
+│   ├── controller/          # REST 控制器
+│   │   ├── AuthController.java
+│   │   ├── CodeReviewController.java
+│   │   ├── AdminController.java
+│   │   └── WebhookController.java
+│   ├── service/             # 业务服务层
+│   │   ├── AiCodeReviewService.java
+│   │   ├── AiModelService.java
+│   │   └── *Service.java
+│   ├── config/              # 配置类
+│   │   ├── SecurityConfig.java
+│   │   ├── AiConfig.java
+│   │   └── WebConfig.java
+│   ├── entity/              # 实体类
+│   ├── repository/          # 数据访问层
+│   ├── dto/                 # 数据传输对象
+│   └── util/                # 工具类
+├── src/main/resources/
+│   ├── application.yml      # 主配置文件
+│   ├── application-dev.yml  # 开发环境配置
+│   ├── application-prod.yml # 生产环境配置
+│   └── static/              # 静态资源
+└── SECURITY_FIXES.md        # 安全修复报告
+```
+
+### 🔧 本地开发
+
+```bash
+# 启动开发环境
+export SPRING_PROFILES_ACTIVE=dev
+mvn spring-boot:run
+
+# 运行测试
+mvn test
+
+# 代码质量检查
+mvn checkstyle:check
+mvn spotbugs:check
+```
+
+### 🎯 添加新功能
+
+1. **新增审查规则**
+
+   ```java
+   // 在 AiCodeReviewService 中添加
+   public String customCodeReview(String code) {
+       // 自定义审查逻辑
+   }
+   ```
+
+2. **新增 API 端点**
+
+   ```java
+   // 在对应 Controller 中添加
+   @PostMapping("/custom")
+   public ResponseEntity<String> customEndpoint(@Valid @RequestBody Request request) {
+       // 端点逻辑
+   }
+   ```
+
+3. **新增配置选项**
+   ```yaml
+   # 在 application.yml 中添加
+   custom:
+     feature:
+       enabled: ${CUSTOM_FEATURE_ENABLED:false}
+   ```
+
+---
+
+## 🔒 安全特性
+
+### 🛡️ 安全评分: A 级
+
+| 安全方面     | 等级 | 说明                       |
+| ------------ | ---- | -------------------------- |
+| 认证授权     | A    | JWT + 角色权限控制         |
+| 数据保护     | A    | 环境变量 + 加密传输        |
+| 输入验证     | A    | Bean Validation + XSS 防护 |
+| 网络安全     | A    | CORS 限制 + 安全头         |
+| Webhook 安全 | A    | HMAC-SHA256 签名验证       |
+
+### 🔐 安全最佳实践
+
+1. **生产部署检查清单**
+
+   - [ ] 修改默认管理员密码
+   - [ ] 配置强 JWT 密钥 (256 位+)
+   - [ ] 启用 HTTPS
+   - [ ] 配置 Webhook 签名验证
+   - [ ] 限制网络访问
+
+2. **定期安全维护**
+   - [ ] 更新依赖版本
+   - [ ] 轮换 API 密钥
+   - [ ] 审查访问日志
+   - [ ] 备份重要数据
+
+详细安全信息请查看 [安全修复报告](SECURITY_FIXES.md)
+
+---
+
+## 📊 监控和运维
+
+### 📈 健康检查
+
+```bash
+# 基础健康检查
+curl http://localhost:8080/actuator/health
+
+# 详细健康信息 (需要认证)
+curl -H "Authorization: Bearer <token>" \
+     http://localhost:8080/actuator/health/details
+```
+
+### 📊 指标监控
+
+```bash
+# 应用指标
+curl http://localhost:8080/actuator/metrics
+
+# JVM 信息
+curl http://localhost:8080/actuator/info
+```
+
+### 📝 日志管理
+
+```yaml
+# 生产环境日志配置
+logging:
+  level:
+    org.linshuai.astralint: INFO
+    org.springframework.security: WARN
+  file:
+    name: /var/log/astralint/application.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+```
+
+---
+
+## 🎯 使用场景
+
+### 🏢 企业代码审查
+
+```bash
+# 团队代码审查工作流
+1. 开发者提交 MR/PR
+2. 自动触发 AI 审查
+3. 生成详细审查报告
+4. 团队评审和改进
+```
+
+### 🔒 安全代码扫描
+
+```bash
+# 安全漏洞检测
+curl -X POST http://localhost:8080/api/code-review/security \
   -H "Content-Type: application/json" \
   -d '{
-    "project_id": "123",
-    "diff_content": "代码差异内容"
+    "projectId": "secure-app",
+    "diffContent": "your code changes...",
+    "reviewType": "SECURITY"
   }'
 ```
 
-### 3. 查看审查结果
-访问后台管理界面查看历史审查记录和统计信息。
+### ⚡ 性能优化建议
 
-## 🤝 贡献
+```bash
+# 性能分析和优化
+curl -X POST http://localhost:8080/api/code-review/performance \
+  -H "Content-Type: application/json" \
+  -d '{
+    "projectId": "high-perf-app",
+    "diffContent": "performance critical code...",
+    "reviewType": "PERFORMANCE"
+  }'
+```
 
-欢迎提交Issue和Pull Request！
+---
+
+## 🤝 贡献指南
+
+### 🎯 如何贡献
+
+1. **Fork** 本仓库
+2. **创建**功能分支 (`git checkout -b feature/amazing-feature`)
+3. **提交**更改 (`git commit -m 'Add amazing feature'`)
+4. **推送**分支 (`git push origin feature/amazing-feature`)
+5. **创建** Pull Request
+
+### 📝 代码规范
+
+- 遵循 Java 编码标准
+- 编写单元测试 (覆盖率 > 80%)
+- 更新相关文档
+- 通过所有 CI 检查
+
+### 🐛 问题报告
+
+使用 [GitHub Issues](../../issues) 报告 Bug，请包含：
+
+- 详细的问题描述
+- 复现步骤
+- 环境信息 (Java 版本、操作系统)
+- 相关日志和截图
+
+---
+
+## 📚 技术栈
+
+### 🎯 后端技术
+
+- **Spring Boot 3.2.0**: 主应用框架
+- **Spring Security**: 认证和授权
+- **Spring AI**: AI 集成框架
+- **Spring Data JPA**: 数据持久化
+- **H2/MySQL**: 数据库支持
+- **JWT**: 无状态认证
+- **Maven**: 依赖管理
+
+### 🎨 前端技术
+
+- **HTML5**: 现代标记语言
+- **CSS3**: 响应式样式
+- **JavaScript ES6+**: 现代前端脚本
+- **Font Awesome**: 图标库
+- **Responsive Design**: 移动端适配
+
+### 🤖 AI 服务
+
+- **阿里云 DashScope**: 通义千问 AI 模型
+- **灵活配置**: 支持多 AI 提供商
+- **模型管理**: 动态切换和配置
+
+---
 
 ## 📄 许可证
 
-MIT License
+本项目采用 [MIT 许可证](LICENSE) - 详见 LICENSE 文件
 
-## 📞 支持
+---
 
-如有问题，请提交Issue或联系开发团队。 
+## 🙏 致谢
+
+- [Spring Boot](https://spring.io/projects/spring-boot) - 强大的 Java 应用框架
+- [Spring AI](https://spring.io/projects/spring-ai) - AI 集成框架
+- [阿里云通义千问](https://dashscope.aliyun.com/) - AI 模型服务
+- 所有贡献者和使用者
+
+---
+
+## 📞 支持与联系
+
+- 📖 **文档**: [项目文档](../../wiki)
+- 🐛 **问题**: [GitHub Issues](../../issues)
+- 💬 **讨论**: [GitHub Discussions](../../discussions)
+- 📧 **邮件**: support@astralint.com
+
+---
+
+<div align="center">
+
+**⭐ 如果这个项目对你有帮助，请给个 Star！**
+
+Made with ❤️ by the AstraLint Team
+
+</div>
