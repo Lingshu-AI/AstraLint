@@ -20,7 +20,6 @@
 
    - **Checkstyle**: 代码风格检查（使用 Google Java Style）
    - **SpotBugs**: 静态代码分析，查找潜在的 bug
-   - **PMD**: 代码质量分析，检查最佳实践
 
 3. **安全检查** (`security.yml`)
    - **OWASP Dependency Check**: 依赖漏洞扫描
@@ -68,7 +67,6 @@ tools/
 
 - `maven-checkstyle-plugin`: 代码风格检查
 - `spotbugs-maven-plugin`: 静态分析
-- `maven-pmd-plugin`: 代码质量分析
 - `dependency-check-maven`: OWASP 安全扫描
 - `jacoco-maven-plugin`: 代码覆盖率
 

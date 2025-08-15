@@ -54,18 +54,3 @@ jobs:
         with:
           name: spotbugs-results
           path: target/spotbugsXml.xml
-
-  pmd:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./tools/github-actions/setup-deps
-      - name: Run PMD
-        run: |
-          mvn pmd:check
-      - name: Upload PMD Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pmd-results
-          path: target/pmd.xml

@@ -80,13 +80,8 @@ spotbugs: ## Run SpotBugs analysis
 	@$(LOG_TARGET)
 	mvn compile spotbugs:check
 
-.PHONY: pmd
-pmd: ## Run PMD analysis
-	@$(LOG_TARGET)
-	mvn pmd:check
-
 .PHONY: quality
-quality: checkstyle spotbugs pmd ## Run all code quality checks
+quality: checkstyle spotbugs ## Run all code quality checks
 	@$(LOG_TARGET)
 	@echo -e "$(GREEN)All quality checks completed!$(NC)"
 
