@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
           // 创建权限列表
           List<SimpleGrantedAuthority> authorities = Arrays.stream(roles)
-              .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+              .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase(Locale.ROOT)))
               .collect(Collectors.toList());
 
           // 创建认证对象

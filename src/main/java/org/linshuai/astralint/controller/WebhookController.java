@@ -212,12 +212,13 @@ public class WebhookController {
             // 异步执行代码审查
             CompletableFuture.runAsync(() -> {
                 try {
-                    String reviewResult = aiCodeReviewService.generateComprehensiveReview(diffContent);
+                    String reviewResult = aiCodeReviewService
+                            .generateComprehensiveReview(reviewRequest.getDiffContent());
                     // 将审查结果添加到MR评论中
-                    gitLabService.addMergeRequestComment(repoConfig, mergeRequestId, reviewResult);
-                    logger.info("GitLab MR {} 代码审查完成", mergeRequestId);
+                    gitLabService.addMergeRequestComment(repoConfig, reviewRequest.getMergeRequestId(), reviewResult);
+                    logger.info("GitLab MR {} 代码审查完成", reviewRequest.getMergeRequestId());
                 } catch (Exception e) {
-                    logger.error("GitLab MR {} 代码审查失败", mergeRequestId, e);
+                    logger.error("GitLab MR {} 代码审查失败", reviewRequest.getMergeRequestId(), e);
                 }
             });
 
@@ -285,12 +286,13 @@ public class WebhookController {
             // 异步执行代码审查
             CompletableFuture.runAsync(() -> {
                 try {
-                    String reviewResult = aiCodeReviewService.generateComprehensiveReview(diffContent);
+                    String reviewResult = aiCodeReviewService
+                            .generateComprehensiveReview(reviewRequest.getDiffContent());
                     // 将审查结果添加到PR评论中
-                    gitHubService.addPullRequestComment(repoConfig, prNumber, reviewResult);
-                    logger.info("GitHub PR {} 代码审查完成", prNumber);
+                    gitHubService.addPullRequestComment(repoConfig, reviewRequest.getMergeRequestId(), reviewResult);
+                    logger.info("GitHub PR {} 代码审查完成", reviewRequest.getMergeRequestId());
                 } catch (Exception e) {
-                    logger.error("GitHub PR {} 代码审查失败", prNumber, e);
+                    logger.error("GitHub PR {} 代码审查失败", reviewRequest.getMergeRequestId(), e);
                 }
             });
 
@@ -358,12 +360,13 @@ public class WebhookController {
             // 异步执行代码审查
             CompletableFuture.runAsync(() -> {
                 try {
-                    String reviewResult = aiCodeReviewService.generateComprehensiveReview(diffContent);
+                    String reviewResult = aiCodeReviewService
+                            .generateComprehensiveReview(reviewRequest.getDiffContent());
                     // 将审查结果添加到PR评论中
-                    giteeService.addPullRequestComment(repoConfig, prNumber, reviewResult);
-                    logger.info("Gitee PR {} 代码审查完成", prNumber);
+                    giteeService.addPullRequestComment(repoConfig, reviewRequest.getMergeRequestId(), reviewResult);
+                    logger.info("Gitee PR {} 代码审查完成", reviewRequest.getMergeRequestId());
                 } catch (Exception e) {
-                    logger.error("Gitee PR {} 代码审查失败", prNumber, e);
+                    logger.error("Gitee PR {} 代码审查失败", reviewRequest.getMergeRequestId(), e);
                 }
             });
 

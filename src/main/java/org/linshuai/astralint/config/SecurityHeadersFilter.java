@@ -56,11 +56,13 @@ public class SecurityHeadersFilter implements Filter {
             "gyroscope=()");
 
     // Cache-Control for sensitive endpoints
-    String requestURI = ((jakarta.servlet.http.HttpServletRequest) request).getRequestURI();
-    if (requestURI.startsWith("/api/admin") || requestURI.startsWith("/actuator")) {
-      httpResponse.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
-      httpResponse.setHeader("Pragma", "no-cache");
-      httpResponse.setHeader("Expires", "0");
+    if (request instanceof jakarta.servlet.http.HttpServletRequest) {
+      String requestURI = ((jakarta.servlet.http.HttpServletRequest) request).getRequestURI();
+      if (requestURI.startsWith("/api/admin") || requestURI.startsWith("/actuator")) {
+        httpResponse.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
+        httpResponse.setHeader("Pragma", "no-cache");
+        httpResponse.setHeader("Expires", "0");
+      }
     }
 
     chain.doFilter(request, response);

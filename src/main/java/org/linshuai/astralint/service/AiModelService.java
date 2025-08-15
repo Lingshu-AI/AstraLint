@@ -16,30 +16,30 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class AiModelService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(AiModelService.class);
-    
+
     @Autowired
     private ChatClient chatClient;
-    
+
     @Autowired
     @Qualifier("codeReviewPromptTemplate")
     private PromptTemplate codeReviewPromptTemplate;
-    
+
     @Autowired
     @Qualifier("codeSummaryPromptTemplate")
     private PromptTemplate codeSummaryPromptTemplate;
-    
+
     @Autowired
     @Qualifier("optimizationPromptTemplate")
     private PromptTemplate codeOptimizationPromptTemplate;
-    
+
     @Value("${ai.code-review.timeout:30000}")
     private int timeout;
-    
+
     @Value("${ai.code-review.enabled:true}")
     private boolean aiEnabled;
-    
+
     /**
      * 使用AI分析代码变更
      */
@@ -47,22 +47,24 @@ public class AiModelService {
         if (!aiEnabled) {
             return "AI代码审查功能已禁用";
         }
-        
+
         try {
             Map<String, Object> parameters = Map.of(
-                "fileName", fileName,
-                "codeDiff", codeDiff
-            );
-            
+                    "fileName", fileName,
+                    "codeDiff", codeDiff);
+
             String prompt = codeReviewPromptTemplate.render(parameters);
             ChatResponse response = chatClient.prompt(prompt).call().chatResponse();
-            return response.getResult().getOutput().getText();
+            if (response != null && response.getResult() != null && response.getResult().getOutput() != null) {
+                return response.getResult().getOutput().getText();
+            }
+            return "AI分析响应为空";
         } catch (Exception e) {
             logger.error("Error analyzing code with AI", e);
             return "AI分析失败: " + e.getMessage();
         }
     }
-    
+
     /**
      * 异步分析代码变更
      */
@@ -76,7 +78,7 @@ public class AiModelService {
             }
         }).orTimeout(timeout, TimeUnit.MILLISECONDS);
     }
-    
+
     /**
      * 生成代码变更摘要
      */
@@ -84,22 +86,24 @@ public class AiModelService {
         if (!aiEnabled) {
             return "AI摘要功能已禁用";
         }
-        
+
         try {
             Map<String, Object> parameters = Map.of(
-                "fileName", fileName,
-                "codeDiff", codeDiff
-            );
-            
+                    "fileName", fileName,
+                    "codeDiff", codeDiff);
+
             String prompt = codeSummaryPromptTemplate.render(parameters);
             ChatResponse response = chatClient.prompt(prompt).call().chatResponse();
-            return response.getResult().getOutput().getText();
+            if (response != null && response.getResult() != null && response.getResult().getOutput() != null) {
+                return response.getResult().getOutput().getText();
+            }
+            return "生成代码摘要响应为空";
         } catch (Exception e) {
             logger.error("Error generating code summary", e);
             return "生成代码摘要失败: " + e.getMessage();
         }
     }
-    
+
     /**
      * 提供代码优化建议
      */
@@ -107,22 +111,24 @@ public class AiModelService {
         if (!aiEnabled) {
             return "AI优化建议功能已禁用";
         }
-        
+
         try {
             Map<String, Object> parameters = Map.of(
-                "fileName", fileName,
-                "codeContent", codeContent
-            );
-            
+                    "fileName", fileName,
+                    "codeContent", codeContent);
+
             String prompt = codeOptimizationPromptTemplate.render(parameters);
             ChatResponse response = chatClient.prompt(prompt).call().chatResponse();
-            return response.getResult().getOutput().getText();
+            if (response != null && response.getResult() != null && response.getResult().getOutput() != null) {
+                return response.getResult().getOutput().getText();
+            }
+            return "生成优化建议响应为空";
         } catch (Exception e) {
             logger.error("Error providing optimization suggestions", e);
             return "生成优化建议失败: " + e.getMessage();
         }
     }
-    
+
     /**
      * 检查代码安全性
      */
@@ -130,27 +136,23 @@ public class AiModelService {
         if (!aiEnabled) {
             return "AI安全检查功能已禁用";
         }
-        
+
         try {
             String securityPrompt = String.format("""
-                作为安全专家，请分析以下代码的潜在安全风险:
-                
-                文件: %s
-                代码内容:
-                %s
-                
-                请重点关注:
-                1. SQL注入风险
-                2. XSS攻击风险
-                3. 权限控制问题
-                4. 敏感信息泄露
-                5. 输入验证不足
-                
-                请用中文回答，严重安全问题用"🚨"标记。
-                """, fileName, codeContent);
-            
+                    作为安全专家，请分析以下代码的潜在安全风险:
+
+                    文件: %s
+                    代码内容:
+                    %s
+
+                    请重点关注:%n1. SQL注入风险%n2. XSS攻击风险%n3. 权限控制问题%n4. 敏感信息泄露%n5. 输入验证不足%n%n请用中文回答，严重安全问题用"🚨"标记。
+                    """, fileName, codeContent);
+
             ChatResponse response = chatClient.prompt(securityPrompt).call().chatResponse();
-            return response.getResult().getOutput().getText();
+            if (response != null && response.getResult() != null && response.getResult().getOutput() != null) {
+                return response.getResult().getOutput().getText();
+            }
+            return "安全检查响应为空";
         } catch (Exception e) {
             logger.error("Error checking code security", e);
             return "安全检查失败: " + e.getMessage();

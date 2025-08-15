@@ -49,7 +49,7 @@ public class WebhookSecurityUtils {
 
       return isValid;
 
-    } catch (Exception e) {
+    } catch (NoSuchAlgorithmException | InvalidKeyException e) {
       logger.error("GitHub Webhook签名验证异常", e);
       return false;
     }

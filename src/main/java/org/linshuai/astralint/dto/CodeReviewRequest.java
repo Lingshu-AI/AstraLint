@@ -111,11 +111,11 @@ public class CodeReviewRequest {
     }
 
     public String[] getFilePaths() {
-        return filePaths;
+        return filePaths != null ? filePaths.clone() : new String[0];
     }
 
     public void setFilePaths(String[] filePaths) {
-        this.filePaths = filePaths;
+        this.filePaths = filePaths != null ? filePaths.clone() : null;
     }
 
     public String getLanguage() {
