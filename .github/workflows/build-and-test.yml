@@ -34,7 +34,7 @@ jobs:
   test:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ./tools/github-actions/setup-deps
       - name: Run Tests
         run: |
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [test]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ./tools/github-actions/setup-deps
       - name: Build Application
         run: |
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [build]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build Docker Image

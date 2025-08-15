@@ -25,7 +25,7 @@ jobs:
   validate-ci-config:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Validate GitHub Actions Workflows
         run: |
           echo "🔍 Validating GitHub Actions workflows..."
