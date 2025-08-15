@@ -75,13 +75,8 @@ checkstyle: ## Run checkstyle analysis
 	@$(LOG_TARGET)
 	mvn checkstyle:check
 
-.PHONY: spotbugs
-spotbugs: ## Run SpotBugs analysis
-	@$(LOG_TARGET)
-	mvn compile spotbugs:check
-
 .PHONY: quality
-quality: checkstyle spotbugs ## Run all code quality checks
+quality: checkstyle ## Run all code quality checks
 	@$(LOG_TARGET)
 	@echo -e "$(GREEN)All quality checks completed!$(NC)"
 

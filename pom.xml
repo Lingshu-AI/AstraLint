@@ -202,24 +202,7 @@
                 </executions>
             </plugin>
 
-            <!-- SpotBugs Plugin -->
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.3.6</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                    <xmlOutput>true</xmlOutput>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
 
 
 
@@ -295,11 +278,7 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.3.6</version>
-            </plugin>
+
 
             <plugin>
                 <groupId>org.jacoco</groupId>

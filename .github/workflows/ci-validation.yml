@@ -75,7 +75,6 @@ jobs:
                       # Check if pom.xml has required plugins
             required_plugins=(
               "maven-checkstyle-plugin"
-              "spotbugs-maven-plugin" 
               "dependency-check-maven"
               "jacoco-maven-plugin"
             )

@@ -19,7 +19,6 @@
 2. **代码质量检查** (`code-quality.yml`)
 
    - **Checkstyle**: 代码风格检查（使用 Google Java Style）
-   - **SpotBugs**: 静态代码分析，查找潜在的 bug
 
 3. **安全检查** (`security.yml`)
    - **OWASP Dependency Check**: 依赖漏洞扫描
@@ -66,7 +65,6 @@ tools/
 `pom.xml` 已更新，包含以下插件：
 
 - `maven-checkstyle-plugin`: 代码风格检查
-- `spotbugs-maven-plugin`: 静态分析
 - `dependency-check-maven`: OWASP 安全扫描
 - `jacoco-maven-plugin`: 代码覆盖率
 

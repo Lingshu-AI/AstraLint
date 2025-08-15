@@ -329,7 +329,7 @@ AstraLint 采用现代化的 CI/CD 流程，确保代码质量和部署可靠性
 ### 🚀 自动化流程
 
 - **构建测试**: 自动编译、单元测试、集成测试
-- **代码质量**: Checkstyle、SpotBugs 静态分析
+- **代码质量**: Checkstyle 静态分析
 - **安全扫描**: OWASP 依赖检查、CodeQL 语义分析
 - **自动部署**: Staging/Production 环境自动化部署
 

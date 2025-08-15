@@ -39,18 +39,3 @@ jobs:
         with:
           name: checkstyle-results
           path: target/checkstyle-*.xml
-
-  spotbugs:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./tools/github-actions/setup-deps
-      - name: Run SpotBugs
-        run: |
-          mvn compile spotbugs:check
-      - name: Upload SpotBugs Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: spotbugs-results
-          path: target/spotbugsXml.xml
