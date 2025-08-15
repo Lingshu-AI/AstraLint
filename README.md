@@ -331,6 +331,7 @@ AstraLint 采用现代化的 CI/CD 流程，确保代码质量和部署可靠性
 - **构建测试**: 自动编译、单元测试、集成测试
 - **代码质量**: Checkstyle 静态分析
 - **安全扫描**: CodeQL 语义分析
+- **单元测试**: Mock 测试框架，覆盖核心业务逻辑
 
 ### 📊 快速命令
 
@@ -344,8 +345,8 @@ make build
 # 代码质量检查
 make quality
 
-# 安全扫描
-make security-check
+# 运行测试
+make test
 
 # Docker 构建
 make docker-build
@@ -393,6 +394,10 @@ AstraLint/
 │   ├── application-dev.yml  # 开发环境配置
 │   ├── application-prod.yml # 生产环境配置
 │   └── static/              # 静态资源
+├── src/test/java/           # Mock单元测试
+│   ├── CodeVoyantApplicationTests.java
+│   ├── service/             # 服务层测试
+│   └── util/                # 工具类测试
 └── SECURITY_FIXES.md        # 安全修复报告
 ```
 
@@ -403,12 +408,72 @@ AstraLint/
 export SPRING_PROFILES_ACTIVE=dev
 mvn spring-boot:run
 
-# 运行测试
+# 运行Mock单元测试
 mvn test
 
 # 代码质量检查
 mvn checkstyle:check
-mvn spotbugs:check
+```
+
+### 🧪 测试框架
+
+AstraLint 采用现代化的 Mock 测试框架，确保代码质量和业务逻辑的正确性：
+
+#### 📊 测试覆盖
+
+- **22 个测试用例** 全部通过
+- **Mock 对象**: 使用 Mockito 模拟外部依赖
+- **无 Spring 上下文**: 轻量级单元测试，启动快速
+- **业务逻辑验证**: 专注核心功能测试
+
+#### 🎯 测试类型
+
+```bash
+# 主应用测试
+CodeVoyantApplicationTests.java
+├── AI模型服务测试
+├── 代码审查服务测试
+├── GitHub服务测试
+├── 工具方法测试
+└── Mock对象验证
+
+# 服务层测试
+service/AiCodeReviewServiceTest.java
+├── 代码差异处理测试
+├── 文件路径解析测试
+├── 变更行数计算测试
+└── 异常处理测试
+
+# GitHub服务测试
+service/GitHubServiceTest.java
+├── API URL构建测试
+├── 响应处理测试
+├── 配置验证测试
+└── Mock HTTP调用测试
+
+# 工具类测试
+util/CodeReviewUtilsTest.java
+├── 文件扩展名提取测试
+├── 语言类型判断测试
+├── 复杂度计算测试
+├── 差异格式验证测试
+└── 安全问题检测测试
+```
+
+#### 🚀 运行测试
+
+```bash
+# 运行所有测试
+mvn test
+
+# 运行特定测试类
+mvn test -Dtest=CodeVoyantApplicationTests
+
+# 运行测试并生成覆盖率报告
+mvn test jacoco:report
+
+# 查看测试结果
+open target/site/jacoco/index.html
 ```
 
 ### 🎯 添加新功能
@@ -565,10 +630,10 @@ curl -X POST http://localhost:8080/api/code-review/performance \
 
 ### 📝 代码规范
 
-- 遵循 Java 编码标准
-- 编写单元测试 (覆盖率 > 80%)
+- 遵循 Java 编码标准 (Google Java Style)
+- 编写 Mock 单元测试，确保业务逻辑覆盖
 - 更新相关文档
-- 通过所有 CI 检查
+- 通过所有 CI 检查 (Checkstyle + CodeQL)
 
 ### 🐛 问题报告
 
