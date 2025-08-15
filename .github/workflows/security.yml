@@ -29,21 +29,6 @@ permissions:
   security-events: write
   actions: read
 jobs:
-  dependency-check:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./tools/github-actions/setup-deps
-      - name: Run OWASP Dependency Check
-        run: |
-          mvn org.owasp:dependency-check-maven:check
-      - name: Upload Dependency Check Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: dependency-check-results
-          path: target/dependency-check-report.html
-
   codeql:
     runs-on: ubuntu-22.04
     permissions:

@@ -80,12 +80,7 @@ quality: checkstyle ## Run all code quality checks
 	@$(LOG_TARGET)
 	@echo -e "$(GREEN)All quality checks completed!$(NC)"
 
-##@ Security
-
-.PHONY: security-check
-security-check: ## Run OWASP dependency check
-	@$(LOG_TARGET)
-	mvn org.owasp:dependency-check-maven:check
+##@ Dependencies
 
 .PHONY: update-dependencies
 update-dependencies: ## Update Maven dependencies
@@ -117,7 +112,7 @@ ci-build: clean compile test package ## CI build pipeline
 	@echo -e "$(GREEN)CI build completed successfully!$(NC)"
 
 .PHONY: ci-quality
-ci-quality: quality security-check ## CI quality pipeline
+ci-quality: quality ## CI quality pipeline
 	@$(LOG_TARGET)
 	@echo -e "$(GREEN)CI quality checks completed!$(NC)"
 

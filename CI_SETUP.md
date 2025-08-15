@@ -21,17 +21,8 @@
    - **Checkstyle**: 代码风格检查（使用 Google Java Style）
 
 3. **安全检查** (`security.yml`)
-   - **OWASP Dependency Check**: 依赖漏洞扫描
    - **CodeQL**: GitHub 的语义代码分析
    - 定期安全扫描（每周一次）
-
-### 🚀 CD 流程
-
-4. **部署流程** (`deploy.yml`)
-   - **Staging 环境**: 主分支推送时自动部署
-   - **Production 环境**: Tag 推送时自动部署
-   - Docker 镜像构建和推送到 GitHub Container Registry
-   - 支持手动触发部署
 
 ## 🔧 配置文件
 
@@ -42,8 +33,7 @@
 ├── workflows/
 │   ├── build-and-test.yml     # 构建和测试
 │   ├── code-quality.yml       # 代码质量检查
-│   ├── security.yml           # 安全检查
-│   └── deploy.yml             # 部署流程
+│   └── security.yml           # 安全检查
 ├── dependabot.yml             # 依赖更新自动化
 ├── PULL_REQUEST_TEMPLATE.md   # PR模板
 └── ISSUE_TEMPLATE/            # Issue模板
@@ -65,7 +55,6 @@ tools/
 `pom.xml` 已更新，包含以下插件：
 
 - `maven-checkstyle-plugin`: 代码风格检查
-- `dependency-check-maven`: OWASP 安全扫描
 - `jacoco-maven-plugin`: 代码覆盖率
 
 ## 📝 本地开发
@@ -82,8 +71,7 @@ make build
 # 运行代码质量检查
 make quality
 
-# 运行安全检查
-make security-check
+
 
 # 构建Docker镜像
 make docker-build
