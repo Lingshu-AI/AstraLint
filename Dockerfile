@@ -1,5 +1,5 @@
 # 使用OpenJDK 17作为基础镜像
-FROM openjdk:17-jdk-slim
+FROM openjdk:18-jdk-slim
 
 # 设置工作目录
 WORKDIR /app
